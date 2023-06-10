@@ -1,77 +1,85 @@
-#include <stdexcept>
-
 #include "byte_stream.hh"
+#include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
-ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity ) {}
+ByteStream::ByteStream( uint64_t capacity )
+  : capacity_( capacity )
+  , buffer_()
+  , num_bytes_written_( 0 )
+  , num_bytes_read_( 0 )
+  , end_write_( false )
+  , has_error_( false )
+{}
 
 void Writer::push( string data )
 {
-  // Your code here.
-  (void)data;
+  if ( is_closed() ) {
+    return;
+  }
+
+  size_t to_write_len_ = min( available_capacity(), data.size() );
+
+  buffer_.append( data.substr( 0, to_write_len_ ) );
+  num_bytes_written_ += to_write_len_;
 }
 
 void Writer::close()
 {
-  // Your code here.
+  end_write_ = true;
 }
 
 void Writer::set_error()
 {
-  // Your code here.
+  has_error_ = true;
 }
 
 bool Writer::is_closed() const
 {
-  // Your code here.
-  return {};
+  return end_write_;
 }
 
 uint64_t Writer::available_capacity() const
 {
-  // Your code here.
-  return {};
+  return capacity_ - ( num_bytes_written_ - num_bytes_read_ );
 }
 
 uint64_t Writer::bytes_pushed() const
 {
-  // Your code here.
-  return {};
+  return num_bytes_written_;
 }
 
 string_view Reader::peek() const
 {
-  // Your code here.
-  return {};
+  return string_view { buffer_ };
 }
 
 bool Reader::is_finished() const
 {
-  // Your code here.
-  return {};
+  return end_write_ && num_bytes_read_ == num_bytes_written_;
 }
 
 bool Reader::has_error() const
 {
-  // Your code here.
-  return {};
+  return has_error_;
 }
 
 void Reader::pop( uint64_t len )
 {
-  // Your code here.
-  (void)len;
+  uint64_t to_read_len_ = min( len, buffer_.size() );
+
+  buffer_.erase( buffer_.begin(), buffer_.begin() + to_read_len_ );
+
+  num_bytes_read_ += to_read_len_;
 }
 
 uint64_t Reader::bytes_buffered() const
 {
-  // Your code here.
-  return {};
+  return num_bytes_written_ - num_bytes_read_;
 }
 
 uint64_t Reader::bytes_popped() const
 {
-  // Your code here.
-  return {};
+  return num_bytes_read_;
 }
