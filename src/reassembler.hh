@@ -2,10 +2,19 @@
 
 #include "byte_stream.hh"
 
+#include <map>
 #include <string>
 
 class Reassembler
 {
+private:
+  std::map<uint64_t, std::string> unassembled_substrings_ {};
+  uint64_t first_unassembled_idx_ { 0 };
+  uint64_t unassembled_bytes_ { 0 };
+  bool closed_ { false };
+
+  bool is_closed() const;
+
 public:
   /*
    * Insert a new substring to be reassembled into a ByteStream.

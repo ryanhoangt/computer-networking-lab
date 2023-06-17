@@ -11,11 +11,11 @@ class ByteStream
 {
 protected:
   uint64_t capacity_;
-  std::string buffer_;
-  uint64_t num_bytes_written_;
-  uint64_t num_bytes_read_;
-  bool end_write_;
-  bool has_error_;
+  std::string buffer_ {};
+  uint64_t num_bytes_written_ { 0 };
+  uint64_t num_bytes_read_ { 0 };
+  bool end_write_ { false };
+  bool has_error_ { false };
 
 public:
   explicit ByteStream( uint64_t capacity );

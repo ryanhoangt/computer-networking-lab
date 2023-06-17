@@ -4,14 +4,7 @@
 
 using namespace std;
 
-ByteStream::ByteStream( uint64_t capacity )
-  : capacity_( capacity )
-  , buffer_()
-  , num_bytes_written_( 0 )
-  , num_bytes_read_( 0 )
-  , end_write_( false )
-  , has_error_( false )
-{}
+ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity ) {}
 
 void Writer::push( string data )
 {
